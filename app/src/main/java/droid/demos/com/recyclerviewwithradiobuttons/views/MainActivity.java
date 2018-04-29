@@ -5,14 +5,20 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import droid.demos.com.recyclerviewwithradiobuttons.R;
 import droid.demos.com.recyclerviewwithradiobuttons.fragments.FragmentMonth;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements FragmentMonth.SetOnChangeDataListener {
+
+    private List<Boolean> statusList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,19 +51,30 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.action_settings) {
-            return true;
+            for (int i = 0; i < statusList.size(); i++) {
+                Log.e("STATUS", "::: " + statusList.get(i) + " :::");
+            }
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    private void showFragment()
-    {
-        FragmentMonth fragmentMonth=new FragmentMonth();
+    private void showFragment() {
+        FragmentMonth fragmentMonth = new FragmentMonth();
         getSupportFragmentManager()
                 .beginTransaction()
-                .add(R.id.conteinerFragments,fragmentMonth,FragmentMonth.TAG)
+                .add(R.id.conteinerFragments, fragmentMonth, FragmentMonth.TAG)
                 .commit();
     }
 
+    @Override
+    public void setOnChangeData(int position) {
+        Boolean newStatus = !statusList.get(position);
+        statusList.set(position, newStatus);
+    }
+
+    @Override
+    public void getListStatus(List<Boolean> statusList) {
+        this.statusList = statusList;
+    }
 }
